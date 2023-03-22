@@ -1,0 +1,46 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=PT+Mono&display=swap');
+
+
+:root {
+  --primary: #117eff;
+  --secondary: #fff805;
+  --dark: #050505;
+  --bright: #ffffff;
+	--bright-darkish: #f4f4f4;
+  --bright-dark: #eee;
+	--bright-darker: #ddd;
+}
+
+h1, body {
+	margin: 0;
+}
+
+body {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  color: var(--dark);
+	background-color: var(--bright);
+}
+
+* {
+  font-family: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+}
+
+@keyframes gradient {
+	0% {
+		background-position: 0% 50%;
+	}
+	50% {
+		background-position: 100% 50%;
+	}
+	100% {
+		background-position: 0% 50%;
+	}
+}
+
+.clickable {
+	cursor: pointer;
+}

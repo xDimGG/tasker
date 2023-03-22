@@ -1,0 +1,35 @@
+.iconText {
+	display: flex;
+	align-items: center;
+	color: var(--bright);
+	text-decoration: none;
+	transition: transform 0.05s linear, border-left 0.05s linear;
+	padding: 7px 0;
+	font-weight: 700;
+}
+
+a.iconText:active:hover {
+	transform: translateX(-3px);
+}
+
+a.iconText.pending, .iconText.active {
+	transform: none;
+	border-left: 3px solid var(--secondary);
+}
+
+.iconText.active {
+	color: var(--secondary);
+}
+
+.iconText > svg {
+	height: 1.2em;
+	width: 1.2em;
+	margin: 0 8px;
+}
+
+.iconText > span {
+	flex-grow: 1;
+	overflow-x: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+}
