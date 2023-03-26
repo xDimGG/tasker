@@ -6,6 +6,8 @@
 	"rules": {
 		"indent": ["error", "tab"],
 		"semi": ["error", "always"],
-		"quotes": ["error", "single"]
+		"quotes": ["error", "single"],
+		"jsx-quotes": ["error", "prefer-single"],
+		"react-hooks/exhaustive-deps": ["off"]
 	}
 }

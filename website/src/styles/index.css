@@ -1,7 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=PT+Mono&display=swap');
 
-
 :root {
   --primary: #117eff;
   --secondary: #fff805;
@@ -21,6 +20,10 @@ body {
   -moz-osx-font-smoothing: grayscale;
   color: var(--dark);
 	background-color: var(--bright);
+}
+
+a {
+	text-decoration: none;
 }
 
 * {

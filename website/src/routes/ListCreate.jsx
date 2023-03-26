@@ -1,11 +1,16 @@
 /* eslint-disable no-unused-vars */
 import { useEffect, useState } from 'react';
-import { useOutletContext } from 'react-router-dom';
+import { Link, useLocation, useNavigate, useOutletContext } from 'react-router-dom';
 import form from '../styles/form.module.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faAdd, faClock, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { faAdd, faArrowLeft, faBackward, faClock, faTrash, faUndo, faX } from '@fortawesome/free-solid-svg-icons';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import TextareaAutosize from 'react-textarea-autosize';
+import { useRequest } from '../api';
+import { Checkbox, useCheckboxState } from 'pretty-checkbox-react';
+
+import content from '../styles/content.module.css';
+import '@djthoms/pretty-checkbox';
 
 const PAGE_NAME = 'New List';
 
@@ -44,9 +49,14 @@ const newItem = () => ({
 const ListCreate = () => {
 	const [name, setName] = useState('');
 	const [items, setItems] = useState([newItem()]);
+	const autoplayCheckbox = useCheckboxState();
+	const loopCheckbox = useCheckboxState();
+	const navigate = useNavigate();
+	const req = useRequest();
 
 	const { setTitle } = useOutletContext();
-	useEffect(() => setTitle(PAGE_NAME), [setTitle]);
+	const location = useLocation();
+	useEffect(() => setTitle(PAGE_NAME), [location]);
 
 	const onDragEnd = result => {
 		// dropped outside the list
@@ -59,6 +69,20 @@ const ListCreate = () => {
 			result.source.index,
 			result.destination.index,
 		));
+	};
+
+	const onSubmit = async e => {
+		e.preventDefault();
+
+		await req('/lists', {
+			name,
+			autoplay: autoplayCheckbox.state,
+			loop: loopCheckbox.state,
+			text: items.map(i => i.text),
+			duration: items.map(i => i.calcDuration()),
+		});
+
+		navigate('/lists');
 	};
 
 	const DraggableItem = (item, i) => {
@@ -136,8 +160,16 @@ const ListCreate = () => {
 
 	return (
 		<>
-			<h1>Create a List</h1>
-			<form className={form.form} onSubmit={e => e.preventDefault()}>
+			<div className={content.title}>
+				<h1>Create a List</h1>
+				<Link to='/lists'>
+					<FontAwesomeIcon
+						icon={faX}
+						className={content.titleIcon}
+					/>
+				</Link>
+			</div>
+			<form className={form.form} onSubmit={onSubmit}>
 				<input
 					placeholder='Name'
 					className={form.name}
@@ -160,12 +192,18 @@ const ListCreate = () => {
 						)}
 					</Droppable>
 				</DragDropContext>
-				<div className={`${form.listItem} ${form.add}`}>
-					<div className='clickable' onClick={() => setItems([...items, newItem()])}>
+				<div
+					className={`${form.listItem} ${form.add} clickable`}
+					onClick={() => setItems([...items, newItem()])}
+				>
+					<div>
 						<FontAwesomeIcon icon={faAdd} />
 					</div>
 				</div>
-				<button className={form.submit} type="submit">Submit</button>
+
+				<Checkbox className={form.checkbox} {...autoplayCheckbox}>Autoplay by default</Checkbox>
+				<Checkbox className={form.checkbox} {...loopCheckbox}>Loop by default</Checkbox>
+				<button className={form.submit} type='submit'>Create!</button>
 			</form>
 		</>
 	);

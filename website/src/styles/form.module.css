@@ -1,7 +1,10 @@
 .form {
 	text-align: center;
-	padding: 20px;
+	padding: 10px;
 	border-radius: 10px;
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
 }
 
 .name {
@@ -23,6 +26,7 @@
 }
 
 .nameBar {
+	margin-top: -10px;
 	width: 100%;
 	height: 3px;
 	position: relative;
@@ -36,7 +40,6 @@
 	);
 	background-size: 200% 200%;
 	background-position-x: 100%;
-	margin-bottom: 10px;
 }
 
 .name:focus + .nameBar,
@@ -48,18 +51,26 @@
 	border: none;
 	color: var(--bright);
 	background-color: var(--primary);
-	font-size: 20px;
-	padding: 15px;
+	font-size: 16px;
+	margin-top: 10px;
+	padding: 10px;
 	border-radius: 5px;
+	cursor: pointer;
+}
+
+.checkbox {
+	margin: 5px 0;
+	text-align: left;
+	font-size: 13px;
 }
 
 .listItem {
 	display: flex;
 	align-items: center;
-	margin-bottom: 10px;
 	background-color: var(--bright);
 	padding: 10px 5px;
 	border-radius: 5px;
+	margin-bottom: 10px;
 }
 
 .listItem .itemIcon {

@@ -5,6 +5,7 @@ import { faHome, faSignIn, faListCheck, faList, faSignOut,  } from '@fortawesome
 import { signInAnonymously, signInWithPopup, signOut } from 'firebase/auth';
 import { GoogleAuthProvider } from 'firebase/auth';
 import { auth } from './firebase';
+import { useRequest } from './api';
 
 import './styles/app.css';
 import { useEffect, useState } from 'react';
@@ -74,7 +75,7 @@ const ContentWrapper = styled.div`
 	margin: 7px auto;
 	background-color: var(--bright-dark);
 	border-radius: 10px;
-	padding: 10px;
+	padding: 10px 25px;
 
 	@media (max-width: 768px) {
 		margin: 0;
@@ -84,56 +85,76 @@ const ContentWrapper = styled.div`
 	}
 `;
 
-const App = () => {
-	const [title, setTitle] = useState();
-	const [user, setUser] = useState();
+let fetchingUser = false;
 
-	useEffect(() => auth.onAuthStateChanged(newUser => setUser(newUser)), []);
+const App = () => {
+	const [title, setTitle] = useState('');
+	const [fbUser, setFBUser] = useState(null);
+	const [user, setUser] = useState(null);
+	const req = useRequest();
+
+	useEffect(() => { document.title = title; }, [title]);
+
+	useEffect(() => auth.onAuthStateChanged(async newUser => {
+		setFBUser(newUser);
+		if (!newUser) return setUser(false);
+
+		if (fetchingUser) return;
+		if (!fbUser || (fbUser.uid !== newUser.uid)) {
+			fetchingUser = true;
+			try {
+				setUser(await req('/login', {
+					name: newUser.displayName,
+					from: fbUser?.isAonymous ? await fbUser.getIdToken() : undefined,
+				}));
+			} finally {
+				fetchingUser = false;
+			}
+		}
+	}), [req, user, fbUser]);
 
 	const signIn = () => signInWithPopup(auth, provider).catch(error => alert(error.message));
 	const goAnonymous = () => signOut(auth).then(() => signInAnonymously(auth));
 
 	return (
-		<>
-			<Wrapper>
-				<Logo className='iconText'>
-					<FontAwesomeIcon icon={faListCheck} />
-					<span>Tasker</span>
-				</Logo>
-				<Navigation>
-					<NavLink to='/' className='iconText'>
-						<FontAwesomeIcon icon={faHome} />
-						<span>Home</span>
-					</NavLink>
-					<NavLink to='/lists' className='iconText'>
-						<FontAwesomeIcon icon={faList} />
-						<span>Lists</span>
-					</NavLink>
-				</Navigation>
-				<Profile className='iconText'>
-					{user && !user.isAnonymous ? (
-						<>
-							<FontAwesomeIcon icon={faSignOut} onClick={goAnonymous} className={'clickable'} />
-							<span>{user.displayName}</span>
-						</>
-					) : (
-						<>
-							<FontAwesomeIcon icon={faSignIn} onClick={signIn} className={'clickable'} />
-							<span>Anonymous</span>
-						</>
-					)}
-				</Profile>
+		<Wrapper>
+			<Logo className='iconText'>
+				<FontAwesomeIcon icon={faListCheck} />
+				<span>Tasker</span>
+			</Logo>
+			<Navigation>
+				<NavLink to='/' className='iconText'>
+					<FontAwesomeIcon icon={faHome} />
+					<span>Home</span>
+				</NavLink>
+				<NavLink to='/lists' className='iconText'>
+					<FontAwesomeIcon icon={faList} />
+					<span>Lists</span>
+				</NavLink>
+			</Navigation>
+			<Profile className='iconText'>
+				{user?.name ? (
+					<>
+						<FontAwesomeIcon icon={faSignOut} onClick={goAnonymous} className={'clickable'} />
+						<span>{user.name}</span>
+					</>
+				) : (
+					<>
+						<FontAwesomeIcon icon={faSignIn} onClick={signIn} className={'clickable'} />
+						<span>Anonymous</span>
+					</>
+				)}
+			</Profile>
 
-				<Content>
-					<ContentWrapper>
-						<Outlet context={{ user, setTitle }} />
-					</ContentWrapper>
-				</Content>
-				<Title>
-					{title}
-				</Title>
-			</Wrapper>
-		</>
+			<Content>
+				<ContentWrapper>
+					<Outlet context={{ fbUser, setTitle }} />
+				</ContentWrapper>
+			</Content>
+			<Title>
+				{title}
+			</Title>
+		</Wrapper>
 	);
 };
 

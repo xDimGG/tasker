@@ -13,7 +13,7 @@ import App from './App';
 import Home from './routes/Home';
 import Lists from './routes/Lists';
 import ListCreate from './routes/ListCreate';
-import ListView from './routes/ListView';
+import List from './routes/List';
 
 const app = createRoot(document.getElementById('root'));
 // Can't use React.StrictMode because of react-beautiful-dnd
@@ -25,7 +25,7 @@ const show = () => app.render(
 				<Route path='/lists'>
 					<Route index element={<Lists />} />
 					<Route path='new' element={<ListCreate />} />
-					<Route path=':id' element={<ListView />} />
+					<Route path=':id' element={<List />} />
 				</Route>
 			</Route>
 		</Routes>

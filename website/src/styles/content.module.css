@@ -1,0 +1,56 @@
+.title {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+
+.titleIcon {
+	height: 1.2em;
+	width: 1.2em;
+	color: var(--dark);
+}
+
+.list {
+	display: flex;
+	align-items: center;
+	color: var(--dark);
+	background-color: var(--bright);
+	padding: 10px;
+	border-radius: 10px;
+	margin: 10px 0;
+	gap: 5px;
+}
+
+.list span {
+	flex-grow: 1;
+}
+
+.pagination {
+	display: flex;
+	justify-content: space-between;
+}
+
+.pagination:not(:has(> .active)) {
+	display: none;
+}
+
+.pagination .inactive {
+	color: transparent;
+}
+
+.pagination .active {
+	color: var(--dark);
+	cursor: pointer;
+	height: 1.4em;
+	width: 1.4em;
+	padding: 10px;
+}
+
+.listItem {
+	display: flex;
+	align-items: center;
+	background-color: var(--bright);
+	padding: 10px 5px;
+	border-radius: 5px;
+	margin-bottom: 10px;
+}

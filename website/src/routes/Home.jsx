@@ -1,13 +1,14 @@
 import { useEffect } from 'react';
-import { useOutletContext } from 'react-router-dom';
+import { useLocation, useOutletContext } from 'react-router-dom';
 
 const Home = () => {
 	const { setTitle } = useOutletContext();
-	useEffect(() => setTitle('Home'), [setTitle]);
+	const location = useLocation();
+	useEffect(() => setTitle('Home'), [location]);
 
 	return (
-		<div className="App">
-			<header className="App-header">
+		<div className='App'>
+			<header className='App-header'>
 				<p style={{margin: 0, fontSize: 30}}>
           Edit <code>src/App.js</code> and save to reload.
 					Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam suscipit et risus eu condimentum. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce ex lacus, malesuada nec tortor quis, imperdiet convallis dui. Cras orci diam, porttitor eu mattis vel, mattis sed est. Pellentesque id erat id nisi laoreet suscipit. Sed tincidunt, urna vitae ultricies pulvinar, tellus urna facilisis dui, a consequat lectus ante non mi. Suspendisse ultrices interdum efficitur. Mauris nisl felis, commodo at tellus non, pharetra sagittis ex. Nam faucibus leo non leo tempor pulvinar.
@@ -23,10 +24,10 @@ Fusce sit amet molestie arcu. Quisque pulvinar dolor leo, malesuada pharetra tor
 
 				</p>
 				<a
-					className="App-link"
-					href="https://reactjs.org"
-					target="_blank"
-					rel="noopener noreferrer"
+					className='App-link'
+					href='https://reactjs.org'
+					target='_blank'
+					rel='noopener noreferrer'
 				>
           Learn React
 				</a>

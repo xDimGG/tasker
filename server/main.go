@@ -5,6 +5,7 @@ import (
 
 	firebase "firebase.google.com/go"
 	firebaseAuth "firebase.google.com/go/auth"
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"github.com/go-pg/pg/v10"
 	"google.golang.org/api/option"
@@ -31,6 +32,7 @@ func main() {
 		User:     "postgres",
 		Password: "1234",
 	})
+	db.AddQueryHook(dbLogger{})
 
 	// Setup DB tables
 	if err = createSchema(); err != nil {
@@ -38,10 +40,22 @@ func main() {
 	}
 
 	r := gin.Default()
+	cfg := cors.DefaultConfig()
+	cfg.AllowAllOrigins = true
+	cfg.AddAllowHeaders("Authorization")
+	r.Use(cors.New(cfg))
 
 	// Register API routes
 	api := r.Group("/api", auth)
+
 	api.POST("/login", postLogin)
+
+	api.POST("/lists", postList)
+
+	api.GET("/lists/:id", getList)
+	api.DELETE("/lists/:id", deleteList)
+
+	api.GET("/users/:uid/lists", getUserLists)
 
 	// Bind to port
 	r.Run("localhost:8080")
